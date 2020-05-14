@@ -64,7 +64,7 @@ where first_name in ('Ann','Anne','Annie');
 
 select *
 from customer
-where first_name like ('Ann%');
+where first_name like 'Ann%';
 
 -- LENGTH: delka textu
 select *
@@ -73,7 +73,7 @@ where length(description) <= 70;
 
 select address2, length(address2) as delka_adresy, *
 from address 
-where address2 ='';  -- 599 rows
+where address2 = '';  -- 599 rows
 
 
 
@@ -317,12 +317,15 @@ select * from film_8;
 -- Jak se jmenuji filmy v inventory_store_1?
 SELECT is1.store_id, 
        is1.inventory_id,
-       f.film_id,
-       f.title
+       f8.film_id,
+       f8.title
 FROM inventory_store_1 as is1
     JOIN film_8 as f8
-       ON is1.film_id = f.film_id
+       ON is1.film_id = f8.film_id
 ;
+
+
+
 
 
 
@@ -348,6 +351,15 @@ FROM film_8 as f8
      LEFT JOIN inventory_store_1 as is1
        ON is1.film_id = f8.film_id
 ;
+SELECT f8.film_id,
+       f8.title,
+       is1.store_id, 
+       is1.inventory_id       
+FROM inventory_store_1 as  is1
+     RIGHT JOIN film_8 as f8
+       ON is1.film_id = f8.film_id
+;
+
 
 
 
@@ -400,7 +412,8 @@ FROM inventory_store_1 as is1
 ;
 SELECT f8.film_id,
        f8.title,
-       is1.store_id, 
+       --is1.store_id,
+	   coalesce(is1.store_id, 9),
        is1.inventory_id
 FROM inventory_store_1 as is1
      RIGHT JOIN film_8 as f8
@@ -416,7 +429,7 @@ where address2 is null;
 
 select *
 from address 
-where address2 =''; --and address2 is not null;  -- 599 rows
+where address2 ='' and address2 is not null;  -- 599 rows
 
 
 
@@ -451,8 +464,15 @@ from inventory_store_1
 -- UNION ALL nevylucuje duplicity
 select * 
 from inventory_store_1
-UNION 
+UNION ALL 
 select *
+from inventory_store_1
+;
+
+select * , 'horni tabulka' as zdroj 
+from inventory_store_1
+UNION ALL 
+select *, 'dolni tabulka' as zdroj 
 from inventory_store_1
 ;
 
